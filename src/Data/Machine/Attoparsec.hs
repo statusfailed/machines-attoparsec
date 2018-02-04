@@ -1,7 +1,11 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE RankNTypes #-}
 
-module Data.Machine.Attoparsec where
+module Data.Machine.Attoparsec
+  ( parsing
+  , parsingEither
+  , parsingMaybe
+  ) where
 
 import Prelude hiding ((.))
 import Control.Applicative
@@ -24,8 +28,8 @@ parsing p = construct $ await >>= go
 
     -- | Deal with the result of a parser
     result r@(Fail _ _ _) = yield r >> stop
-    result (Done i r)         = yield (Done BS.empty r) >> go i
-    result (Partial f)      = (liftM f await <|> stop) >>= result
+    result (Done i r)     = yield (Done BS.empty r) >> go i
+    result (Partial f)    = (liftM f await <|> stop) >>= result
     {-# INLINABLE go #-}
     {-# INLINABLE result #-}
 
